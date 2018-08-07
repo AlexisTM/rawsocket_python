@@ -4,6 +4,20 @@ Raw socket is a layer 2 python library for communication using the MAC addresses
 
 This allows you to create a custom made Ethernet/WiFi communication system which is **not** using IP nor TCP/UDP or to debug custom frames such as SERCOS III, Profibus, ARP, PTP, ...
 
+Python versions tested:
+
+- [x] 2.7.x
+- [ ] 3.x
+
+OSes:
+
+- [ ] Linux 14.04
+- [x] Linux 16.04
+- [ ] Linux 18.04
+- [ ] Linux 18.04
+- [ ] Windows 10
+- [ ] Mac OSX
+
 **Pros:**
 
 - Low level
@@ -33,9 +47,28 @@ cd rawsocket_python
 sudo python setup.py install
 ```
 
-## Usage
+## Fast testing
 
-### Sending
+On one computer:
+
+```bash
+sudo python -c "from rawsocketpy import RawSocket
+sock = RawSocket('wlp2s0', 0xEEFA)
+print(sock.recv())"
+
+# 12:34:56:78:9A:BC == 0xEEFA => FF:FF:FF:FF:FF:FF - OK:
+# Boo
+```
+
+On the second computer:
+
+```bash
+sudo python -c "from rawsocketpy import RawSocket
+sock = RawSocket('wlp2s0', 0xEEFA)
+print(sock.send('Boo'))"
+```
+
+## In-depth
 
 ```python
 from rawsocketpy import RawSocket
@@ -49,10 +82,6 @@ sock = RawSocket("wlp2s0", 0xEEFA)
 sock.send("some data") # Broadcast "some data" with an ethertype of 0xEEFA
 sock.send("personal data", dest="\xAA\xBB\xCC\xDD\xEE\xFF") # Send "personal data to \xAA\xBB\xCC\xDD\xEE\xFF with an ether type of 0xEEFA
 sock.send("other data", ethertype="\xEE\xFF") # Broadcast "other data" with an ether type of 0xEEFF
-
-# On capable hardware, you can spoof your MAC address:
-sock.mac = "\x12\x13\x14\x15\x16\x17"
-sock.send("some data")
 ```
 
 ### Receiving
@@ -64,6 +93,7 @@ from rawsocketpy import RawSocket, u_to_str
 
 sock = RawSocket("wlp2s0", 0xEEFA)
 packet = sock.recv()
+# The type of packet is RawPacket() which allows pretty printing and unmarshal the raw data.
 
 print(packet) # Pretty print
 packet.dest   # unicode string "\xFF\xFF\xFF\xFF\xFF\xFF"
@@ -75,7 +105,6 @@ print u_to_str(packet.dest)     # Human readable MAC:  FF:FF:FF:FF:FF:FF
 print u_to_str(packet.type, "") # Human readable type: EEFA
 ```
 
-
 ## I want to contribue!!
 
 You are free to contribue, the following capabilities are welcome:
@@ -83,6 +112,7 @@ You are free to contribue, the following capabilities are welcome:
 - Windows compatibility
 - Python 3.x compatibility
 - Server implementation (callbacks on new data)
+- Readthedocs documentation
 
 ## Credits
 
