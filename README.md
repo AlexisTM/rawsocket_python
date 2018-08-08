@@ -59,12 +59,15 @@ while True: print(sock.recv())"
 # Boo
 ```
 
-On the second computer:
+On the second computer over the same router:
 
 ```bash
-sudo python -c "from rawsocketpy import RawSocket
+sudo python -c "from rawsocketpy import RawSocket; import time
 sock = RawSocket('wlp2s0', 0xEEFA)
->hile True: print(sock.send('Boo'))"
+while True:
+  sock.send('Boo')
+  print('Boo has been sent')
+  time.sleep(0.5)"
 ```
 
 ## In-depth
