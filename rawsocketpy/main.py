@@ -1,5 +1,5 @@
 import socket, select, struct, time
-from .util import get_hw, u_to_str, protocol_to_ethertype, to_bytes
+from .util import get_hw, to_str, protocol_to_ethertype, to_bytes
 
 class RawPacket():
     def __init__(self, data):
@@ -12,14 +12,15 @@ class RawPacket():
             self.dest, self.src, self.type = data[0:6], data[6:12], data[12:14]
             self.data = data[14:]
             self.success = True
-        except:
+        except Exception as e:
+            print("rawsocket: ", e)
             self.success = False
 
     def __repr__(self):
-        return "".join([u_to_str(self.src), " == 0x", u_to_str(self.type, separator=""), " => ", u_to_str(self.dest), " - ", "OK" if self.success else "FAILED"])
+        return "".join([to_str(self.src), " == 0x", to_str(self.type, separator=""), " => ", to_str(self.dest), " - ", "OK" if self.success else "FAILED"])
 
     def __str__(self):
-        return "".join([self.__repr__(), ":\n", self.data])
+        return "".join([self.__repr__(), ":\n", self.data.decode('utf-8')])
 
 class RawSocket(object):
     BROADCAST = "\xff\xff\xff\xff\xff\xff"

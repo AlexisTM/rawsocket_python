@@ -7,13 +7,12 @@ This allows you to create a custom made Ethernet/WiFi communication system which
 Python versions tested:
 
 - [x] 2.7.x
-- [ ] 3.x
+- [x] 3.5.x
 
 OSes:
 
 - [ ] Linux 14.04
 - [x] Linux 16.04
-- [ ] Linux 18.04
 - [ ] Linux 18.04
 - [ ] Windows 10
 - [ ] Mac OSX
@@ -54,7 +53,7 @@ On one computer:
 ```bash
 sudo python -c "from rawsocketpy import RawSocket
 sock = RawSocket('wlp2s0', 0xEEFA)
-print(sock.recv())"
+while True: print(sock.recv())"
 
 # 12:34:56:78:9A:BC == 0xEEFA => FF:FF:FF:FF:FF:FF - OK:
 # Boo
@@ -65,7 +64,7 @@ On the second computer:
 ```bash
 sudo python -c "from rawsocketpy import RawSocket
 sock = RawSocket('wlp2s0', 0xEEFA)
-print(sock.send('Boo'))"
+>hile True: print(sock.send('Boo'))"
 ```
 
 ## In-depth
@@ -110,9 +109,9 @@ print u_to_str(packet.type, "") # Human readable type: EEFA
 You are free to contribue, the following capabilities are welcome:
 
 - Windows compatibility
-- Python 3.x compatibility
-- Server implementation (callbacks on new data)
+- Async implementation (callbacks on new data)
 - Readthedocs documentation
+- More Python versions and OS tests
 
 ## Credits
 

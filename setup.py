@@ -15,6 +15,7 @@ setuptools.setup(name='rawsocketpy',
       packages=setuptools.find_packages(),
       classifiers=(
           "Programming Language :: Python :: 2",
+          "Programming Language :: Python :: 2",
           "Development Status :: 4 - Beta",
           "License :: OSI Approved :: MIT License",
           "Operating System :: POSIX :: Linux",
