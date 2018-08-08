@@ -26,7 +26,7 @@ else:
         return separator.join("{:02x}".format(ord(c)) for c in data).upper()
 
 def main():
-    print u_to_str(get_hw("wlp2s0"))
+    print(u_to_str(get_hw("wlp2s0")))
 
 if __name__ == '__main__':
     main()
