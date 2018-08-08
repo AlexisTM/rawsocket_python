@@ -4,8 +4,8 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(name='rawsocketpy',
-      version='0.2',
-      description='This library allows you to implemnet a custom layer 2 communication using raw sockets in Python 2 and Python 3, synchronous and asynchronous, with and without callbacks.',
+      version='0.2.1',
+      description='This library allows you to implement a custom layer 2 communication using raw sockets in Python 2 and Python 3, synchronous and asynchronous, with and without callbacks.',
       long_description=long_description,
       long_description_content_type="text/markdown",
       url='https://github.com/AlexisTM/rawsocket_python',

@@ -5,6 +5,11 @@ Welcome to RawSocketPy's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   installation
+   quicktest
+   raw_socket
+   server_mode
+
 Indices and tables
 ==================
 
