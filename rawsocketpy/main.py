@@ -1,5 +1,5 @@
 import socket, select, struct, time
-from get_hw import get_hw, u_to_str
+from .get_hw import get_hw, u_to_str
 
 class RawPacket():
     def __init__(self, data):
