@@ -1,10 +1,9 @@
-from setuptools import setup
 import setuptools
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-setup(name='rawsocketpy',
+setuptools.setup(name='rawsocketpy',
       version='0.1',
       description='This library allows you to implemnet a custom layer 2 communication using raw sockets in Python',
       long_description=long_description,
