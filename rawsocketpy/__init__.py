@@ -1,4 +1,4 @@
 # Package init
 
-from get_hw import get_hw, u_to_str
-from main import RawPacket, RawSocket
+from .util import get_hw, u_to_str, protocol_to_ethertype, to_bytes
+from .main import RawPacket, RawSocket

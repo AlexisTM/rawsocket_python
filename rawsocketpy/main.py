@@ -1,5 +1,5 @@
 import socket, select, struct, time
-from .get_hw import get_hw, u_to_str
+from .util import get_hw, u_to_str, protocol_to_ethertype, to_bytes
 
 class RawPacket():
     def __init__(self, data):
@@ -27,7 +27,7 @@ class RawSocket(object):
         if  not 0x0000 < protocol < 0xFFFF:
             raise ValueError("Protocol has to be in the range 0 to 65535")
         self.protocol = socket.htons(protocol)
-        self.ethertype = self.protocol_to_ethertype(protocol)
+        self.ethertype = protocol_to_ethertype(protocol)
         self.interface = interface
         self.mac = get_hw(self.interface)
         if no_recv_protocol:
@@ -42,14 +42,11 @@ class RawSocket(object):
             sock.bind((interface, 0))
         return sock
 
-    @staticmethod
-    def protocol_to_ethertype(protocol):
-        return chr((protocol & 0xFF00) >> 8) + chr(protocol & 0x00FF)
-
     def send(self, msg, dest=None, ethertype=None):
         if ethertype is None: ethertype = self.ethertype
         if dest is None: dest = self.BROADCAST
-        self.sock.send(dest + self.mac + ethertype + msg)
+        payload = (to_bytes(dest) + self.mac + to_bytes(ethertype) +  to_bytes(msg))
+        self.sock.send(payload)
 
     def recv(self):
         data = self.sock.recv(1500)
