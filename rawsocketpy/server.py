@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from .main import RawPacket, RawSocket
 from .util import get_hw, to_bytes, protocol_to_ethertype
 

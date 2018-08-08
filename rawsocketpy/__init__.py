@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 """A Raw socket implementation allowing any ethernet type to be used/sniffed.
 
 .. moduleauthor:: Alexis Paques <alexis.paques@gmail.com>
