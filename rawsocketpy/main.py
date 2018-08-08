@@ -27,6 +27,8 @@ class RawSocket(object):
     def __init__(self, interface, protocol, sock=None, no_recv_protocol=False):
         if  not 0x0000 < protocol < 0xFFFF:
             raise ValueError("Protocol has to be in the range 0 to 65535")
+        self.no_recv_protocol = no_recv_protocol
+        self.non_processed_protocol = protocol
         self.protocol = socket.htons(protocol)
         self.ethertype = protocol_to_ethertype(protocol)
         self.interface = interface
@@ -35,6 +37,10 @@ class RawSocket(object):
             self.sock = self.sock_create(self.interface, 0, sock)
         else: 
             self.sock = self.sock_create(self.interface, self.protocol, sock)
+        self.close = self.sock.close
+
+    def dup(self):
+        return RawSocket(self.interface, self.non_processed_protocol, self.sock.dup(), self.no_recv_protocol)
 
     @staticmethod
     def sock_create(interface, protocol, sock=None):
@@ -55,17 +61,3 @@ class RawSocket(object):
     
     def __str__(self):
         return self.interface
-
-def main():
-    na = NetworkAdapter("wlp2s0", 0xAA42)
-    i = 0
-    while True:
-        try:
-            na.send(str(i))
-            time.sleep(0.1)
-            i += 1
-        except:
-            break
-
-if __name__ == '__main__':
-    main()
