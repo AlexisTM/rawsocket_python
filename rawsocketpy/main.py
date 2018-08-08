@@ -2,7 +2,18 @@ import socket, select, struct, time
 from .util import get_hw, to_str, protocol_to_ethertype, to_bytes
 
 class RawPacket():
+    """RawPacket is the resulting data container. 
+
+    It reads raw data and stores the MAC source, MAC destination, the Ethernet type and the data payload.
+
+    RawPacket.success is true if the packet is successfuly read.
+    """
     def __init__(self, data):
+        """A really simple class.
+
+        Args:
+           foo (data): raw ethernet frame coming from the socket library, either **bytes in Python3** or **str in Python2**
+        """
         self.dest = ""
         self.src = ""
         self.type = ""

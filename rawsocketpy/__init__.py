@@ -1,4 +1,8 @@
-# Package init
+"""A Raw socket implementation allowing any ethernet type to be used/sniffed.
+
+.. moduleauthor:: Alexis Paques <alexis.paques@gmail.com>
+
+"""
 from __future__ import print_function
 try:
     from gevent import monkey; monkey.patch_all()
