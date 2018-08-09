@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from __future__ import absolute_import
 import socket, select, struct, time
 from .packet import RawPacket
 from .util import get_hw, to_str, protocol_to_ethertype, to_bytes
