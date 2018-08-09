@@ -7,7 +7,7 @@ Welcome to RawSocketPy's documentation!
 
    installation
    quicktest
-   API
+   api
    raw_socket
    server_mode
 
