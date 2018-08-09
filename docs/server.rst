@@ -9,6 +9,7 @@ If the handle/setup fails, the ``finish`` function will be executed.
     :name: Blocking Stateless
 
     from rawsocketpy import RawServer, RawRequestHandler
+    import time
 
     class LongTaskTest(RawRequestHandler):
         def setup(self):
@@ -35,6 +36,7 @@ If the handle/setup fails, the ``finish`` function will be executed.
     :name: Blocking Statefull
 
     from rawsocketpy import RawServerCallback, RawRequestHandler
+    import time
 
     def callback(handler, server):
         print("Testing")
