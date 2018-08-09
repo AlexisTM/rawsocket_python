@@ -26,6 +26,8 @@ OSes:
 - Dead simple
 - Can broadcast
 - MTU of 1500
+- Asynchronous server
+- Stateful capability
 
 **Cons:**
 
