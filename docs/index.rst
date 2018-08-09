@@ -9,7 +9,8 @@ Welcome to RawSocketPy's documentation!
    quicktest
    api
    raw_socket
-   server_mode
+   server
+   async
 
 Indices and tables
 ==================

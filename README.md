@@ -1,5 +1,7 @@
 # RawSocketPy
 
+[API Documentation](https://rawsocket-python.readthedocs.io/en/latest/api.html)
+
 Raw socket is a layer 2 python library for communication using the MAC addresses only. 
 
 This allows you to create a custom made Ethernet/WiFi communication system which is **not** using IP nor TCP/UDP or to debug custom frames such as SERCOS III, Profibus, ARP, PTP, ...
@@ -91,20 +93,80 @@ sock.send("other data", ethertype="\xEE\xFF") # Broadcast "other data" with an e
 On another machine, you can run the following:
 
 ```python
-from rawsocketpy import RawSocket, u_to_str
+from rawsocketpy import RawSocket, to_str
 
 sock = RawSocket("wlp2s0", 0xEEFA)
 packet = sock.recv()
 # The type of packet is RawPacket() which allows pretty printing and unmarshal the raw data.
 
-print(packet) # Pretty print
-packet.dest   # unicode string "\xFF\xFF\xFF\xFF\xFF\xFF"
-packet.src    # unicode string "\x12\x12\x12\x12\x12\x13"
-packet.type   # unicode string "\xEE\xFA"
-packegt.data  # unicode string "some data"
+# If you are using Python2, all data is encoded as unicode strings "\x01.." while Python3 uses bytearray.
 
-print u_to_str(packet.dest)     # Human readable MAC:  FF:FF:FF:FF:FF:FF
-print u_to_str(packet.type, "") # Human readable type: EEFA
+print(packet) # Pretty print
+packet.dest   # string "\xFF\xFF\xFF\xFF\xFF\xFF" or bytearray(b"\xFF\xFF\xFF\xFF\xFF\xFF")
+packet.src    # string "\x12\x12\x12\x12\x12\x13" or bytearray(b"\x12\x12\x12\x12\x12\x13")
+packet.type   # string "\xEE\xFA" or bytearray([b"\xEE\xFA"]
+packegt.data  # string "some data" or bytearray(b"some data"]
+
+print(to_str(packet.dest))     # Human readable MAC:  FF:FF:FF:FF:FF:FF
+print(to_str(packet.type, "")) # Human readable type: EEFA
+```
+
+## Stateless blocking Server
+
+```python
+from rawsocketpy import RawServer
+
+class LongTaskTest(RawRequestHandler):
+    def handle(self):
+        time.sleep(1)
+        print(self.packet)
+
+    def finish(self):
+        print("End")
+
+    def setup(self):
+        print("Begin") 
+
+def main():
+    rs = RawServer("wlp2s0", 0xEEFA, LongTaskTest)
+    rs.spin()
+
+if __name__ == '__main__':
+    main()
+```
+
+## Stateful Asynchronous server
+
+Available **only** if **gevent** is installed.
+
+```python
+from rawsocketpy import RawRequestHandler, RawAsyncServerCallback
+import time
+
+def callback(handler, server):
+    print("callback")
+    handler.setup()
+    handler.handle()
+    handler.finish()
+
+
+class LongTaskTest(RawRequestHandler):
+    def handle(self):
+        time.sleep(1)
+        print(self.packet)
+
+    def finish(self):
+        print("End")
+
+    def setup(self):
+        print("Begin") 
+
+def main():
+    rs = RawAsyncServerCallback("wlp2s0", 0xEEFA, LongTaskTest, callback)
+    rs.spin()
+
+if __name__ == '__main__':
+    main()
 ```
 
 ## I want to contribue!!
@@ -112,8 +174,6 @@ print u_to_str(packet.type, "") # Human readable type: EEFA
 You are free to contribue, the following capabilities are welcome:
 
 - Windows compatibility
-- Async implementation (callbacks on new data)
-- Readthedocs documentation
 - More Python versions and OS tests
 
 ## Credits
