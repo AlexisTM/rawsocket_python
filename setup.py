@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(name='rawsocketpy',
-      version='0.2.1',
+      version='0.3.0',
       description='This library allows you to implement a custom layer 2 communication using raw sockets in Python 2 and Python 3, synchronous and asynchronous, with and without callbacks.',
       long_description=long_description,
       long_description_content_type="text/markdown",
