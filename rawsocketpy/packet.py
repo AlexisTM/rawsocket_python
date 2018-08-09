@@ -14,20 +14,20 @@ class RawPacket():
         """A really simple class.
 
         :param data: raw ethernet II frame coming from the socket library, either **bytes in Python3** or **str in Python2**
-        :type data: str/bytes/bytearray
+        :type data: str or bytes or bytearray
         """
         self.dest = ""
         """:description: Destination MAC address
-        :type: str/bytes/bytearray"""
+        :type: str or bytes or bytearray"""
         self.src = ""
         """:description: Source MAC address
-        :type: str/bytes/bytearray"""
+        :type: str or bytes or bytearray"""
         self.type = ""
         """:description: Ethertype
-        :type: str/bytes/bytearray"""
+        :type: str or bytes or bytearray"""
         self.data = ""
         """:description: Payload received
-        :type: str/bytes/bytearray"""
+        :type: str or bytes or bytearray"""
         self.success = False
         """:description: True if the packet has been successfully unmarshalled 
         :type: bool"""
