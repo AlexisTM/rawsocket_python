@@ -9,7 +9,7 @@ This allows you to create a custom made Ethernet/WiFi communication system which
 Python versions tested:
 
 - [x] 2.7.x
-- [x] 3.5.x
+- [ ] 3.5.x - Reimplement to_bytes for Socket.send
 
 OSes:
 

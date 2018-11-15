@@ -25,7 +25,7 @@ class RawSocket(object):
         :param no_recv_protocol: If true (default False), the socket will not subscribe to anything, recv will just block.
         :type no_recv_protocol: bool
         """
-        if  not 1536 < protocol < 0xFFFF:
+        if  not protocol < 0xFFFF:
             raise ValueError("Protocol has to be in the range 0 to 65535")
         self.no_recv_protocol = no_recv_protocol
         self.non_processed_protocol = protocol
@@ -37,7 +37,7 @@ class RawSocket(object):
         :type: str/bytes/bytearray"""
         if no_recv_protocol:
             self.sock = self.sock_create(self.interface, 0, sock)
-        else: 
+        else:
             self.sock = self.sock_create(self.interface, self.protocol, sock)
         self.close = self.sock.close
 
@@ -65,7 +65,7 @@ class RawSocket(object):
         """
         if ethertype is None: ethertype = self.ethertype
         if dest is None: dest = self.BROADCAST
-        payload = (to_bytes(dest) + self.mac + to_bytes(ethertype) +  to_bytes(msg))
+        payload = dest + self.mac + ethertype + msg
         self.sock.send(payload)
 
     def recv(self):
@@ -75,7 +75,7 @@ class RawSocket(object):
 
         :rtype: RawPacket
         """
-        data = self.sock.recv(1500)
+        data = self.sock.recv(1024)
         return RawPacket(data)
     
     def __str__(self):

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import absolute_import
-from .util import to_str, to_bytes
+from .util import to_str
 
 class RawPacket():
     """RawPacket is the resulting data container of the RawSocket class. 
