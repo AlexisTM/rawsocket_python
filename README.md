@@ -177,6 +177,7 @@ You are free to contribue, the following capabilities are welcome:
 
 - Windows compatibility
 - More Python versions and OS tests
+- Bring a major refactor ;)
 
 ## Credits
 
