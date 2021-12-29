@@ -2,35 +2,54 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import absolute_import
-import socket
-import fcntl
-import struct
-import sys
+import os
+import bytearray
+from functools import lru_cache
 
-if sys.version_info >= (3,0):
-    import binascii
+if os.name == 'nt':
+    from getmac import get_mac_address
+
+    @lru_cache(maxsize=100)
     def get_hw(ifname):
-        """Returns a bytearray containing the MAC address of the interface.
-
-        :param ifname: Interface name such as ``wlp2s0``
-        :type ifname: str
-        :rtype: str
-        :rtype: bytearray
-        """
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        info = fcntl.ioctl(s.fileno(), 0x8927,  struct.pack('256s',  bytearray(ifname[:15], 'utf-8')))
-        return info[18:24]
+        mac = get_mac_address(interface=ifname)
+        if mac:
+            # Convert from "AA:BB:CC:DD:EE:FF" to b'\xAA\xbb\xCC\xDD\xEE\xFF'
+            info = bytes(map(lambda x: int(x, 16), mac.split(":")))
+            return info
+        return bytes([0, 0, 0, 0, 0, 0])
 else:
-    def get_hw(ifname):
-        """Returns a unicode string containing the MAC address of the interface.
+    import fcntl
+    import struct
+    import socket
+    import sys
+    if sys.version_info >= (3, 0):
+        @lru_cache(maxsize=100)
+        def get_hw(ifname):
+            """Returns bytes containing the MAC address of the interface.
 
-        :param ifname: Interface name such as ``wlp2s0``
-        :type ifname: str
-        :rtype: str
-        """
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        info = fcntl.ioctl(s.fileno(), 0x8927,  struct.pack('256s', ifname[:15]))
-        return info[18:24]
+            :param ifname: Interface name such as ``wlp2s0``
+            :type ifname: str
+            :rtype: str
+            :rtype: bytes
+            """
+            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            info = fcntl.ioctl(s.fileno(), 0x8927,  struct.pack(
+                '256s',  bytes(ifname[:15], 'utf-8')))
+            return info[18:24]
+    else:
+        @lru_cache(maxsize=100)
+        def get_hw(ifname):
+            """Returns a unicode string containing the MAC address of the interface.
+
+            :param ifname: Interface name such as ``wlp2s0``
+            :type ifname: str
+            :rtype: str
+            """
+            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            info = fcntl.ioctl(s.fileno(), 0x8927,
+                               struct.pack('256s', ifname[:15]))
+            return info[18:24]
+
 
 def to_str(data, separator=":"):
     """Stringify hexadecimal input;
@@ -52,6 +71,7 @@ def to_str(data, separator=":"):
     else:
         return str(data)
 
+
 def protocol_to_ethertype(protocol):
     """Convert the int protocol to a two byte chr.
 
@@ -60,6 +80,7 @@ def protocol_to_ethertype(protocol):
     :rtype: str
     """
     return chr((protocol & 0xFF00) >> 8) + chr(protocol & 0x00FF)
+
 
 def to_bytes(*data):
     """Flatten the arrays and Converts data to a bytearray
@@ -92,4 +113,3 @@ def to_bytes(*data):
         if type(d) in [bytes, bytearray]:
             result += d
     return result
-
