@@ -6,15 +6,17 @@ from .packet import RawPacket
 from .socket import RawSocket
 from .util import get_hw, to_bytes, protocol_to_ethertype
 
+
 class RawServer(object):
     """A **Blocking** base server implementation of a server on top of the RawSocket.
-    It waits for data, encapsulate the data in the RequestHandlerClass provided and blocks until the RequestHandlerClass run() function finishes.  
+    It waits for data, encapsulate the data in the RequestHandlerClass provided and blocks until the RequestHandlerClass run() function finishes.
 
-    :note: packet = recv() 
-           -> RequestHandlerClass(packet) 
+    :note: packet = recv()
+           -> RequestHandlerClass(packet)
            -> RequestHandlerClass.run()
            -> loop
     """
+
     def __init__(self, interface, protocol, RequestHandlerClass):
         """
 
@@ -50,11 +52,12 @@ class RawServer(object):
 class RawServerCallback(RawServer):
     """A blocking server implementation that uses a centralized callback. This is useful for a stateful server.
 
-    :note: packet = recv() 
-           -> RequestHandlerClass(packet, self) 
+    :note: packet = recv()
+           -> RequestHandlerClass(packet, self)
            -> callback(RequestHandlerClass, self)
            -> loop
     """
+
     def __init__(self, interface, protocol, RequestHandlerClass, callback):
         """
         :param interface: interface to be used.
@@ -68,7 +71,7 @@ class RawServerCallback(RawServer):
         """
         self.callback = callback
         RawServer.__init__(self, interface, protocol, RequestHandlerClass)
-    
+
     def handle_handler(self, handler):
         """
         Overwritten: Calls callback(handler, self) instead.
@@ -77,9 +80,10 @@ class RawServerCallback(RawServer):
 
 
 class RawRequestHandler(object):
-    """The class that handles the request. 
+    """The class that handles the request.
     It has access to the packet and the server data.
     """
+
     def __init__(self, packet, server):
         self.packet = packet
         """:description: Packet received
@@ -91,7 +95,7 @@ class RawRequestHandler(object):
     def finish(self):
         """empty: To be **overwritten**"""
         pass
-    
+
     def setup(self):
         """empty: To be **overwritten**"""
         pass
@@ -99,9 +103,9 @@ class RawRequestHandler(object):
     def handle(self):
         """empty: To be **overwritten**"""
         pass
-    
+
     def run(self):
-        """Run the request handling process: 
+        """Run the request handling process:
 
         try:
             * self.setup()

@@ -2,22 +2,26 @@
 
 [API Documentation](https://rawsocket-python.readthedocs.io/en/latest/api.html)
 
-Raw socket is a layer 2 python library for communication using the MAC addresses only. 
+Raw socket is a layer 2 python library for communication using the MAC addresses only.
 
 This allows you to create a custom made Ethernet/WiFi communication system which is **not** using IP nor TCP/UDP or to debug custom frames such as SERCOS III, Profibus, ARP, PTP, ...
 
 Python versions tested:
 
 - [x] 2.7.x
-- [ ] 3.5.x - Reimplement to_bytes for Socket.send
+- [x] 3.5.x
+- [x] 3.8.x
 
 OSes:
 
-- [ ] Linux 14.04
+- [x] Linux 14.04
 - [x] Linux 16.04
-- [ ] Linux 18.04
-- [ ] Windows 10
-- [ ] Mac OSX
+- [x] Linux 18.04
+- [x] Linux 20.04
+
+Not working on:
+- [ ] Windows 10 - Due to Raw socket limitation
+- [ ] Mac OSX - Due to implementation (can likely be made working)
 
 **Pros:**
 
@@ -36,7 +40,7 @@ OSes:
 - No encryption
 - No fragmentation
 - **Requires root**
-- MTU of 1500
+- MTU of 1500 (Ethernet frames)
 
 ## Installation
 
@@ -63,7 +67,7 @@ while True: print(sock.recv())"
 # Boo
 ```
 
-On the second computer over the same router:
+On **the second computer** over the same router (or same network on Zerotier):
 
 ```bash
 sudo python -c "from rawsocketpy import RawSocket; import time
@@ -81,7 +85,7 @@ from rawsocketpy import RawSocket
 
 # 0xEEFA is the ethertype
 # The most common are available here: https://en.wikipedia.org/wiki/EtherType
-# The full official list is available here: https://regauth.standards.ieee.org/standards-ra-web/pub/view.html#registries 
+# The full official list is available here: https://regauth.standards.ieee.org/standards-ra-web/pub/view.html#registries
 # Direct link: https://standards.ieee.org/develop/regauth/ethertype/eth.csv
 # You can use whatever you want but using a already use type can have unexpected behaviour.
 sock = RawSocket("wlp2s0", 0xEEFA)
@@ -127,7 +131,7 @@ class LongTaskTest(RawRequestHandler):
         print("End")
 
     def setup(self):
-        print("Begin") 
+        print("Begin")
 
 def main():
     rs = RawServer("wlp2s0", 0xEEFA, LongTaskTest)
@@ -161,7 +165,7 @@ class LongTaskTest(RawRequestHandler):
         print("End")
 
     def setup(self):
-        print("Begin") 
+        print("Begin")
 
 def main():
     rs = RawAsyncServerCallback("wlp2s0", 0xEEFA, LongTaskTest, callback)
@@ -175,7 +179,8 @@ if __name__ == '__main__':
 
 You are free to contribue, the following capabilities are welcome:
 
-- Windows compatibility
+- Windows compatibility (even possible?)
+- MacOS compatibility
 - More Python versions and OS tests
 - Bring a major refactor ;)
 

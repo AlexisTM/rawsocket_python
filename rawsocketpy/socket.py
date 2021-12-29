@@ -2,17 +2,22 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import absolute_import
-import socket, select, struct, time
+import socket
+import select
+import struct
+import time
 from .packet import RawPacket
 from .util import get_hw, to_str, protocol_to_ethertype, to_bytes
+
 
 class RawSocket(object):
     """RawSocket is using the socket library to send raw ethernet frames, using socket.RAW_SOCK
 
     It has a similar API to the socket library: send/recv/close/dup.
     """
-    BROADCAST = "\xff\xff\xff\xff\xff\xff"
+    BROADCAST = b"\xff\xff\xff\xff\xff\xff"
     """:description: Default MAC address: ``"\\xff\\xff\\xff\\xff\\xff\\xff"``"""
+
     def __init__(self, interface, protocol, sock=None, no_recv_protocol=False):
         """
 
@@ -25,7 +30,7 @@ class RawSocket(object):
         :param no_recv_protocol: If true (default False), the socket will not subscribe to anything, recv will just block.
         :type no_recv_protocol: bool
         """
-        if  not protocol < 0xFFFF:
+        if not protocol < 0xFFFF:
             raise ValueError("Protocol has to be in the range 0 to 65535")
         self.no_recv_protocol = no_recv_protocol
         self.non_processed_protocol = protocol
@@ -63,9 +68,11 @@ class RawSocket(object):
         :param ethertype: Allow to send data using a different ethertype using the same socket. Default is the protocol given in the constructor.
         :type ethertype: str/bytes/bytearray
         """
-        if ethertype is None: ethertype = self.ethertype
-        if dest is None: dest = self.BROADCAST
-        payload = dest + self.mac + ethertype + msg
+        if ethertype is None:
+            ethertype = self.ethertype
+        if dest is None:
+            dest = self.BROADCAST
+        payload = to_bytes(dest, self.mac, ethertype, msg)
         self.sock.send(payload)
 
     def recv(self):
@@ -77,6 +84,6 @@ class RawSocket(object):
         """
         data = self.sock.recv(1024)
         return RawPacket(data)
-    
+
     def __str__(self):
         return self.interface

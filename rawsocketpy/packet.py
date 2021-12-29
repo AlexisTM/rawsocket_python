@@ -4,13 +4,15 @@
 from __future__ import absolute_import
 from .util import to_str
 
+
 class RawPacket():
-    """RawPacket is the resulting data container of the RawSocket class. 
+    """RawPacket is the resulting data container of the RawSocket class.
 
     It reads raw data and stores the MAC source, MAC destination, the Ethernet type and the data payload.
 
     RawPacket.success is true if the packet is successfuly read.
     """
+
     def __init__(self, data):
         """A really simple class.
 
@@ -30,7 +32,7 @@ class RawPacket():
         """:description: Payload received
         :type: str or bytes or bytearray"""
         self.success = False
-        """:description: True if the packet has been successfully unmarshalled 
+        """:description: True if the packet has been successfully unmarshalled
         :type: bool"""
         try:
             self.dest, self.src, self.type = data[0:6], data[6:12], data[12:14]
