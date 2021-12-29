@@ -3,7 +3,7 @@
 
 """A Raw socket implementation allowing any ethernet type to be used/sniffed.
 
-If gevent is available, sockets are monkey patched and two additionnal asynchronous server implementations are available: :class:`RawAsyncServer`, :class:`RawAsyncServerCallback` 
+If gevent is available, sockets are monkey patched and two additionnal asynchronous server implementations are available: :class:`RawAsyncServer`, :class:`RawAsyncServerCallback`
 
 .. moduleauthor:: Alexis Paques <alexis.paques@gmail.com>
 """
@@ -11,7 +11,8 @@ If gevent is available, sockets are monkey patched and two additionnal asynchron
 from __future__ import absolute_import
 from __future__ import print_function
 try:
-    from gevent import monkey; monkey.patch_all()
+    from gevent import monkey
+    monkey.patch_all()
     from .asyncserver import RawAsyncServer, RawAsyncServerCallback
 except ImportError:
     print("Gevent could not be loaded; the sockets will not be cooperative.")
