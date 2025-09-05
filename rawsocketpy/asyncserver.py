@@ -13,6 +13,7 @@ class RawAsyncServer(RawServer):
 
     This will ensure you are not loosing data because the handler is too long.
     """
+
     pool = pool.Pool()
 
     def handle_handler(self, handler):
