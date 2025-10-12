@@ -3,38 +3,56 @@
 
 from __future__ import absolute_import
 import socket
-import fcntl
 import struct
 import sys
 
-if sys.version_info >= (3, 0):
+if sys.platform == "win32":
+    import psutil
 
     def get_hw(ifname):
-        """Returns a bytearray containing the MAC address of the interface.
+        addrs = psutil.net_if_addrs()
+        if ifname not in addrs:
+            raise ValueError(f"Interface '{ifname}' not found")
 
-        :param ifname: Interface name such as ``wlp2s0``
-        :type ifname: str
-        :rtype: str
-        :rtype: bytearray
-        """
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        info = fcntl.ioctl(
-            s.fileno(), 0x8927, struct.pack("256s", bytearray(ifname[:15], "utf-8"))
-        )
-        return info[18:24]
+        for snic in addrs[ifname]:
+            if snic.family == psutil.AF_LINK:
+                mac_str = snic.address.replace("-", ":")
+                mac_bytes = bytearray(int(b, 16) for b in mac_str.split(":"))
+                return mac_bytes
+
+        raise ValueError(f"No MAC address found for interface '{ifname}'")
 
 else:
+    import fcntl
 
-    def get_hw(ifname):
-        """Returns a unicode string containing the MAC address of the interface.
+    if sys.version_info >= (3, 0):
 
-        :param ifname: Interface name such as ``wlp2s0``
-        :type ifname: str
-        :rtype: str
-        """
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        info = fcntl.ioctl(s.fileno(), 0x8927, struct.pack("256s", ifname[:15]))
-        return info[18:24]
+        def get_hw(ifname):
+            """Returns a bytearray containing the MAC address of the interface.
+
+            :param ifname: Interface name such as ``wlp2s0``
+            :type ifname: str
+            :rtype: str
+            :rtype: bytearray
+            """
+            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            info = fcntl.ioctl(
+                s.fileno(), 0x8927, struct.pack("256s", bytearray(ifname[:15], "utf-8"))
+            )
+            return info[18:24]
+
+    else:
+
+        def get_hw(ifname):
+            """Returns a unicode string containing the MAC address of the interface.
+
+            :param ifname: Interface name such as ``wlp2s0``
+            :type ifname: str
+            :rtype: str
+            """
+            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            info = fcntl.ioctl(s.fileno(), 0x8927, struct.pack("256s", ifname[:15]))
+            return info[18:24]
 
 
 def to_str(data, separator=":"):
