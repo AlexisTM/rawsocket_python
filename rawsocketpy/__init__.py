@@ -10,8 +10,10 @@ If gevent is available, sockets are monkey patched and two additionnal asynchron
 
 from __future__ import absolute_import
 from __future__ import print_function
+
 try:
     from gevent import monkey
+
     monkey.patch_all()
     from .asyncserver import RawAsyncServer, RawAsyncServerCallback
 except ImportError:

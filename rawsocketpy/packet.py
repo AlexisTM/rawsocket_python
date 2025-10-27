@@ -5,7 +5,7 @@ from __future__ import absolute_import
 from .util import to_str
 
 
-class RawPacket():
+class RawPacket:
     """RawPacket is the resulting data container of the RawSocket class.
 
     It reads raw data and stores the MAC source, MAC destination, the Ethernet type and the data payload.
@@ -43,7 +43,17 @@ class RawPacket():
             self.success = False
 
     def __repr__(self):
-        return "".join([to_str(self.src), " == 0x", to_str(self.type, separator=""), " => ", to_str(self.dest), " - ", "OK" if self.success else "FAILED"])
+        return "".join(
+            [
+                to_str(self.src),
+                " == 0x",
+                to_str(self.type, separator=""),
+                " => ",
+                to_str(self.dest),
+                " - ",
+                "OK" if self.success else "FAILED",
+            ]
+        )
 
     def __str__(self):
-        return "".join([self.__repr__(), ":\n", self.data.decode('utf-8')])
+        return "".join([self.__repr__(), ":\n", self.data.decode("utf-8")])

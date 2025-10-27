@@ -2,9 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import absolute_import
-from .packet import RawPacket
 from .socket import RawSocket
-from .util import get_hw, to_bytes, protocol_to_ethertype
 
 
 class RawServer(object):

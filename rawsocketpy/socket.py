@@ -3,11 +3,8 @@
 
 from __future__ import absolute_import
 import socket
-import select
-import struct
-import time
 from .packet import RawPacket
-from .util import get_hw, to_str, protocol_to_ethertype, to_bytes
+from .util import get_hw, protocol_to_ethertype, to_bytes
 
 
 class RawSocket(object):
@@ -15,6 +12,7 @@ class RawSocket(object):
 
     It has a similar API to the socket library: send/recv/close/dup.
     """
+
     BROADCAST = b"\xff\xff\xff\xff\xff\xff"
     """:description: Default MAC address: ``"\\xff\\xff\\xff\\xff\\xff\\xff"``"""
 
@@ -47,9 +45,13 @@ class RawSocket(object):
         self.close = self.sock.close
 
     def dup(self):
-        """Duplicates the RawSocket
-        """
-        return RawSocket(self.interface, self.non_processed_protocol, self.sock.dup(), self.no_recv_protocol)
+        """Duplicates the RawSocket"""
+        return RawSocket(
+            self.interface,
+            self.non_processed_protocol,
+            self.sock.dup(),
+            self.no_recv_protocol,
+        )
 
     @staticmethod
     def sock_create(interface, protocol, sock=None):
